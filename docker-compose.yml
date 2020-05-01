@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  trab-sd:
+    app:
+      build: .
+      environment:
+        - env_var_name=${VARIABLE_NAME}
