@@ -1,5 +1,7 @@
 import app from './app';
 
+const mongoose = require('./config/config');
+
 const port = process.env.PORT || 6969;
 
 app.listen(port, () => {

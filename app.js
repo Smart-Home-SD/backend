@@ -1,6 +1,11 @@
 import express from 'express';
-import { urlencoded, json } from 'body-parser';
+import {
+  urlencoded,
+  json
+} from 'body-parser';
 import cors from 'cors';
+
+const router = require('./routes/router');
 
 require('dotenv').config();
 // const jwt = require('jsonwebtoken');
@@ -32,5 +37,7 @@ app.get('/whoami', (req, res) => {
     purpouseInLife: 'Be an API for IoT applications for the distributed Systems class',
   });
 });
+
+app.use(router());
 
 export default app;

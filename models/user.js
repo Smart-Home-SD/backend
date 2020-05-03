@@ -19,22 +19,23 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre('save', (next) => {
+userSchema.pre('save', function (next) {
   const user = this;
 
   if (user.isModified('password')) {
     const salt = bcrypt.genSaltSync(saltRounds);
-    user.password = bcrypt.hashSync(user.password,salt);
+    user.password = bcrypt.hashSync(user.password, salt);
     next();
   }
+
 });
 
-userSchema.pre('updateOne', (next) => {
+userSchema.pre('updateOne', function (next) {
   const user = this;
 
-  if (user.isModified('password')) {
+  if (user._update.password) {
     const salt = bcrypt.genSaltSync(saltRounds);
-    user.password = bcrypt.hashSync(user.password,salt);
+    user._update.password = bcrypt.hashSync(user.password, salt);
     next();
   }
 });
