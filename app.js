@@ -1,12 +1,12 @@
 import express from 'express';
 import {
   urlencoded,
-  json
+  json,
 } from 'body-parser';
 import cors from 'cors';
+import userRouter from './routes/userRouter';
 
-const router = require('./routes/router');
-
+require('./config/config');// Db config
 require('dotenv').config();
 // const jwt = require('jsonwebtoken');
 
@@ -28,6 +28,8 @@ app.use(
   }),
 );
 
+app.use('/users', userRouter);
+
 app.get('/', (req, res) => {
   res.sendStatus(418);
 });
@@ -37,7 +39,5 @@ app.get('/whoami', (req, res) => {
     purpouseInLife: 'Be an API for IoT applications for the distributed Systems class',
   });
 });
-
-app.use(router());
 
 export default app;

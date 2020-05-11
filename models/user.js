@@ -1,44 +1,44 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
-const saltRounds = 5;
 
 const userSchema = new mongoose.Schema({
+
   username: {
     type: String,
     required: true,
+    trim: true,
     unique: true,
   },
   password: {
     type: String,
+    lowercase: true,
     required: true,
+  },
+  token: {
+    type: String,
   },
   userType: {
     type: String,
     enum: ['ADMIN', 'USER'],
   },
+  tokens: [{
+    token: {
+      type: String,
+      required: true,
+    },
+  }],
 });
 
-userSchema.pre('save', function (next) {
-  const user = this;
+// userSchema.pre('save', function callback(next) {
+//   const user = this;
 
-  if (user.isModified('password')) {
-    const salt = bcrypt.genSaltSync(saltRounds);
-    user.password = bcrypt.hashSync(user.password, salt);
-    next();
-  }
+//   if (user.isModified('password') && user.isNew()) {
+//     const salt = bcrypt.genSaltSync(saltRounds);
+//     user.password = bcrypt.hashSync(user.password, salt);
+//     next();
+//   }
+// });
 
-});
-
-userSchema.pre('updateOne', function (next) {
-  const user = this;
-
-  if (user._update.password) {
-    const salt = bcrypt.genSaltSync(saltRounds);
-    user._update.password = bcrypt.hashSync(user.password, salt);
-    next();
-  }
-});
 
 const User = mongoose.model('User', userSchema);
 
