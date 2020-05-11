@@ -18,6 +18,9 @@ module.exports = {
   },
   rules: {
     'no-console': 0,
+    "linebreak-style":0,
+    "quotes": ["error", "single"],
+    "no-underscore-dangle": ["error", { "allow": ["_id", "_update"] }],
     "jest/no-disabled-tests": "warn",
     "jest/no-focused-tests": "error",
     "jest/no-identical-title": "error",
