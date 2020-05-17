@@ -28,14 +28,14 @@ export const createUser = (req, res) => {
 
       // override the cleartext password with the hashed one
       newUser.password = hash;
-      User.create(newUser, (err, doc) => {
+      User.create(newUser, (errUser, doc) => {
         const userInfo = {
           username: doc.username,
           userType: doc.userType,
           id: doc.id,
         };
 
-        if (err) {
+        if (errUser) {
           console.log(err);
           res.status(400).json({
             Status: false,
@@ -68,16 +68,17 @@ export const getUser = (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log('here');
+    // console.log('here');
     const user = await User.findOne({ username });
     if (!user) {
       throw new Error('No user registered');
     }
-    console.log(user);
-    console.log(password);
-    console.log(user.password);
+    // console.log(user);
+    // console.log(password);
+    // console.log(user.password);
     bcrypt.compare(password, user.password, (err, result) => {
-      console.log(result);
+      // console.log(err);
+      // console.log(result);
       if (!result) {
         throw new Error('Invalid login credentials');
       }
