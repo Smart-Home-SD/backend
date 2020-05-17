@@ -89,6 +89,7 @@ export const loginUser = async (req, res) => {
       const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY);
       return res.send({ user, token });
     });
+    return res.status(400);
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);
