@@ -28,17 +28,6 @@ const userSchema = new mongoose.Schema({
   }],
 });
 
-// userSchema.pre('save', function callback(next) {
-//   const user = this;
-
-//   if (user.isModified('password') && user.isNew()) {
-//     const salt = bcrypt.genSaltSync(saltRounds);
-//     user.password = bcrypt.hashSync(user.password, salt);
-//     next();
-//   }
-// });
-
-
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
