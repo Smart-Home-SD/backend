@@ -103,32 +103,31 @@ export const updateUser = async (req, res) => {
       if (err) return res.status(404).send({ error: err });
 
       if (!result) {
-        console.log('changing password!')
         bcrypt.genSalt(SALT_WORK_FACTOR, (errSalt, salt) => {
           if (errSalt) throw errSalt;
 
           // hash the password along with our new salt
           bcrypt.hash(newUser.password, salt, (errHash, hash) => {
             if (errHash) throw errHash;
-            console.log(hash)
-            newUser.password = hash;
-            console.log('new hash saved!')
-            console.log(newUser)
 
-            User.updateOne({_id: newUser.id }, newUser, (err) => {
-              if (err) {
-                return res.status(404).send({ error: err });
+            newUser.password = hash;
+
+            User.updateOne({ _id: newUser.id }, newUser, (upErr) => {
+              if (upErr) {
+                return res.status(404).send({ error: upErr });
               }
               return res.status(200).json({ message: 'user updated!' });
             });
           });
         });
       }
+      return res.status(400).send();
     });
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);
   }
+  return res.status(400).send();
 };
 
 export const loginUser = async (req, res) => {

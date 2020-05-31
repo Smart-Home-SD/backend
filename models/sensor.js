@@ -9,7 +9,7 @@ const sensorSchema = new mongoose.Schema({
   name: {
     type: String,
   },
-  ownerId: {
+  owner: {
     type: String,
     required: true,
     trim: true,
