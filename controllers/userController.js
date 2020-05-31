@@ -87,39 +87,43 @@ export const deleteUser = (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const {
-      username, password, userType, id,
-    } = req.body;
+    const newUser = {
+      id: req.body.id,
+      username: req.body.username,
+      password: req.body.password,
+      userType: req.body.userType,
+    };
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ _id: newUser.id });
     if (!user) {
       return res.status(400).json({ error: 'User not registered' });
     }
 
-    bcrypt.compare(password, user.password, (err, result) => {
+    bcrypt.compare(newUser.password, user.password, (err, result) => {
       if (err) return res.status(404).send({ error: err });
 
       if (!result) {
-        console.log('here!!!');
+        console.log('changing password!')
         bcrypt.genSalt(SALT_WORK_FACTOR, (errSalt, salt) => {
           if (errSalt) throw errSalt;
 
           // hash the password along with our new salt
-          bcrypt.hash(password, salt, (errHash, hash) => {
+          bcrypt.hash(newUser.password, salt, (errHash, hash) => {
             if (errHash) throw errHash;
-            user.password = hash;
+            console.log(hash)
+            newUser.password = hash;
+            console.log('new hash saved!')
+            console.log(newUser)
+
+            User.updateOne({_id: newUser.id }, newUser, (err) => {
+              if (err) {
+                return res.status(404).send({ error: err });
+              }
+              return res.status(200).json({ message: 'user updated!' });
+            });
           });
         });
       }
-    });
-
-    if (username !== user.username) user.username = username;
-    if (userType !== user.userType) user.userType = userType;
-    User.updateOne({ _id: id }, user, (err) => {
-      if (err) {
-        return res.status(404).send({ error: err });
-      }
-      return res.status(200).json({ message: 'user updated!' });
     });
   } catch (error) {
     console.log(error);
@@ -133,7 +137,7 @@ export const loginUser = async (req, res) => {
     // console.log('here');
     const user = await User.findOne({ username });
     if (!user) {
-      throw new Error('No user registered');
+      return res.status(404).send({ error: 'No user registered' });
     }
     // console.log(user);
     // console.log(password);
@@ -142,7 +146,7 @@ export const loginUser = async (req, res) => {
       // console.log(err);
       // console.log(result);
       if (!result) {
-        throw new Error('Invalid login credentials');
+        return res.status(404).send({ error: 'Invalid login credentials' });
       }
 
       if (!user) {
