@@ -1,16 +1,15 @@
 import express from 'express';
-import { createUser, getUser, loginUser } from '../controllers/userController';
-// const sensorController = require('../controllers/sensorController');
+import { createUser, getUser, getAllUsers , loginUser, deleteUser, updateUser } from '../controllers/userController';
 
 
 const router = express.Router();
 
-router.get('/', getUser);
+router.get('/', getAllUsers);
 router.get('/:id', getUser);
 router.post('/', createUser);
 router.post('/login', loginUser);
-// router.get('/me', createUser);
-// router.get('/users/logoutall', createUser);
-// router.get('/users/logout', createUser);
+router.delete('/delete/:id', deleteUser);
+router.put('/update', updateUser);
+
 
 export default router;

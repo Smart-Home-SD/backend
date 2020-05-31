@@ -6,6 +6,15 @@ const sensorSchema = new mongoose.Schema({
     require: true,
     unique: true,
   },
+  name: {
+    type: String,
+  },
+  owner: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+  },
   type: {
     type: String,
     enum: ['TEMP', 'LIGHT', 'PRES'],
