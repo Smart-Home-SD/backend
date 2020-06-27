@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const sensorSchema = new mongoose.Schema({
   deviceId: {
-    type: String,
+    type: Number,
     require: true,
     unique: true,
   },

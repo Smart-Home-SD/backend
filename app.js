@@ -6,6 +6,7 @@ import {
 import cors from 'cors';
 import userRouter from './routes/userRouter';
 import sensorRouter from './routes/sensorRouter';
+import sensorDataRouter from './routes/sensorDataRouter';
 
 require('./config/config');// Db config
 require('dotenv').config();
@@ -31,6 +32,7 @@ app.use(
 
 app.use('/users', userRouter);
 app.use('/sensors', sensorRouter);
+app.use('/sensorData', sensorDataRouter);
 
 app.get('/', (req, res) => {
   res.sendStatus(418);

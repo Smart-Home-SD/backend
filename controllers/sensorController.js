@@ -7,9 +7,7 @@ export const createSensor = (req, res) => {
         Status: false,
         Error: errSensor,
       });
-    }
-
-    else {
+    } else {
       console.log(doc);
 
       const sensorInfo = {
@@ -21,7 +19,7 @@ export const createSensor = (req, res) => {
 
       res.status(200).json({
         Status: true,
-        UserObject: sensorInfo,
+        SensorObject: sensorInfo,
       });
     }
   });
@@ -31,9 +29,12 @@ export const getSensor = (req, res) => {
   const sensorId = req.params.id;
   Sensor.findOne({ _id: sensorId }).select('_id deviceId name owner type').exec((err, doc) => {
     if (err) {
-      res.status(404).send({ error: err });
+      return res.status(404).send({ error: err });
     }
-    res.status(200).json(doc);
+    if (doc == null) {
+      return res.status(404).json({ message: 'sensor not found' });
+    }
+    return res.status(200).json(doc);
   });
   return null;
 };
@@ -42,6 +43,9 @@ export const getAllSensors = (req, res) => {
   Sensor.find().select('_id deviceId name owner type').exec((err, doc) => {
     if (err) {
       return res.status(404).send({ error: err });
+    }
+    if (doc.length === 0) {
+      return res.status(404).json({ message: 'no sensor found' });
     }
     return res.status(200).json(doc);
   });
@@ -54,15 +58,21 @@ export const deleteSensor = (req, res) => {
     if (err) {
       return res.status(404).send({ error: err });
     }
-    return res.status(200).json(doc);
+    if (doc.deletedCount === 0) {
+      return res.status(404).json({ message: 'sensor not found' });
+    }
+    return res.status(200).json({ message: 'sensor deleted!' });
   });
   return null;
 };
 
 export const updateSensor = async (req, res) => {
-  Sensor.updateOne({ _id: req.body.id }, req.body, (upErr) => {
+  Sensor.updateOne({ _id: req.body.id }, req.body, (upErr, doc) => {
     if (upErr) {
       return res.status(404).send({ error: upErr });
+    }
+    if (doc == null) {
+      return res.status(404).json({ message: 'sensor not found' });
     }
     return res.status(200).json({ message: 'sensor updated!' });
   });
