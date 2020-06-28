@@ -15,14 +15,14 @@ export const getLastSensorData = (req, res) => {
 };
 
 async function generateJsonHistory(doc) {
-  const end = 1592939670000;
+  const end = Date.now();
   const start = end - 86400000;
   const step = 3600000;
   const jsonData = [];
 
-  console.log(start);
-  console.log(end);
-  console.log(doc.length);
+  // console.log(start);
+  // console.log(end);
+  // console.log(doc.length);
 
   for (let i = 0; i <= 24; i += 1) {
     const stepStart = start + (step * i);
@@ -42,7 +42,6 @@ async function generateJsonHistory(doc) {
     // console.log(avg);
 
     jsonData.push({ time: stepEnd, average: avg });
-
   }
 
   return jsonData;
@@ -50,7 +49,9 @@ async function generateJsonHistory(doc) {
 
 export const getSensorHistory = async (req, res) => {
   const sensorId = req.params.id;
-  Sensor.find({ id: sensorId, timestamp: { $gte: 1592853270000, $lte: 1592939670000} }).select('id timestamp active temperature').sort({ timestamp: -1 }).exec(async (err, doc) => {
+  const end = Date.now();
+  const start = end - 86400000;
+  Sensor.find({ id: sensorId, timestamp: { $gte: start, $lte: end } }).select('id timestamp active temperature').sort({ timestamp: -1 }).exec(async (err, doc) => {
     if (err) {
       return res.status(404).send({ error: err });
     }
